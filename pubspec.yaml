@@ -1,0 +1,29 @@
+name: camara_recursos
+description: >-
+  Control de hardware de cámara, procesamiento multimedia y gestión de
+  recursos en Flutter (Programación de Dispositivos Móviles).
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+# Las versiones se fijan ejecutando una sola vez:
+#   flutter pub add camera video_player path_provider path
+# El comando reemplaza cada entrada por la versión estable compatible
+# con tu SDK (^x.y.z). No se escriben a mano para no inventar versiones.
+dependencies:
+  flutter:
+    sdk: flutter
+  camera:
+  video_player:
+  path_provider:
+  path:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints:
+
+flutter:
+  uses-material-design: true
