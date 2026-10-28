@@ -195,25 +195,44 @@ excluyen `/`, `\` y `.` para impedir rutas como `../` o cambiar la extensión.
 
 `flutter test` ejecuta las pruebas de la lógica pura (`test/widget_test.dart`).
 
-### 7.2 Manuales (dispositivo físico)
+### 7.2 Manuales
 
-| # | Caso | Resultado esperado |
-|---|---|---|
-| 1 | Tomar foto → Cancelar | El archivo desaparece de la zona temporal (verificar en Galería → panel) |
-| 2 | Tomar foto → nombre válido → Aceptar | Aparece en la galería con ese nombre y su extensión |
-| 3 | Aceptar con un nombre repetido | Mensaje "Ya existe un archivo con ese nombre"; no se sobrescribe |
-| 4 | Nombre con `/` o `.` | El validador lo rechaza |
-| 5 | Grabar 10 s → Aceptar | El temporizador avanza cada segundo; el video se reproduce en la confirmación |
-| 6 | Grabar y pulsar Home | La grabación se detiene, el video incompleto se borra y al volver aparece un aviso |
-| 7 | Con la cámara abierta, pulsar Home | En la consola: `paused` → "Controlador liberado"; el indicador de cámara del SO se apaga |
-| 8 | Volver a la app | "Inicializada"; la vista previa regresa |
-| 9 | Botón atrás en la confirmación | Mismo efecto que Cancelar |
-| 10 | Cerrar la app con capturas sin confirmar y reabrirla | La limpieza de arranque las elimina |
+**Entorno de ejecución.** Emulador de Android Studio `Medium_Phone_API_37.0`
+(Android 17, x86_64, aceleración por hardware WHPX), APK compilado en modo *release*
+con Flutter 3.44. Cámara del emulador: escena emulada. Las acciones se ejecutaron con
+`adb shell input` y la consola se leyó con `adb logcat -s flutter:I`. El registro
+completo está en [`evidencias/logcat_flutter.txt`](evidencias/logcat_flutter.txt).
 
-**Medición de recursos.** Flutter DevTools → *Memory*: repetir 20 capturas
-canceladas; la memoria debe volver a su nivel base (sin crecimiento sostenido).
-*Performance*: con la vista previa activa, el hilo de UI no debe mostrar trabajo
-por fotograma, lo que confirma que la vista previa no pasa por Dart.
+El registro confirma además que el motor usa **Impeller** sobre OpenGL ES
+(`Using the Impeller rendering backend (OpenGLES)`), es decir, la composición de la
+interfaz y de la textura de la cámara se hace en la GPU.
+
+| # | Caso | Resultado obtenido | Evidencia |
+|---|---|---|---|
+| 1 | Tomar foto → **Cancelar** | ✅ Consola: `Descartado: CAP…jpg`. Galería: *Temporal 0 · 0 B* | `04_galeria_tras_cancelar.png` |
+| 2 | Tomar foto → nombre `Practica_camara` → **Aceptar** | ✅ `Guardado en documentos: …/capturas/Practica_camara.jpg`; aparece en la galería y la zona temporal sigue en 0 (se movió, no se copió) | `01_confirmacion_foto.png`, `08_galeria_foto_guardada.png` |
+| 3 | Aceptar con un nombre ya existente | ✅ Mensaje *"Ya existe un archivo con ese nombre en la galería."*; no se sobrescribe | `05_nombre_duplicado.png` |
+| 4 | Nombre `mi.foto/1` | ✅ El validador lo rechaza. Se corrigió un detalle visual: el mensaje se cortaba en una línea (`errorMaxLines: 2`) | `06_nombre_invalido.png` |
+| 5 | Grabar 10 s → **Aceptar** | ✅ Temporizador visible (00:06 en la captura), selector de modo y galería bloqueados durante la grabación; el video de 00:10 se reproduce en la confirmación y se guarda como `Video_prueba.mp4` | `09_grabando_temporizador.png`, `10_confirmacion_video.png` |
+| 6 | Grabar y pulsar **Inicio** | ✅ Consola: `inactive → hidden → paused`, `Descartado: REC…mp4`, `Controlador liberado`. Al volver aparece el aviso de grabación interrumpida | `11_…`, `13_regreso_aviso.png` |
+| 7 | Indicador de cámara del sistema | ✅ El punto verde de privacidad de Android está encendido durante la grabación y desaparece en la pantalla de Inicio: el sistema confirma que la app soltó la cámara | `11_grabando_antes_de_inicio.png`, `12_inicio_sin_indicador.png` |
+| 8 | Volver a la app | ✅ `resumed` → `Inicializada: 1 (textura en GPU)`; la vista previa regresa | `13_regreso_aviso.png` |
+| 9 | Botón **atrás** del sistema en la confirmación | ✅ Mismo efecto que Cancelar: `Descartado: CAP…jpg` | `07_galeria_tras_atras.png` |
+| 10 | Foto sin confirmar → cierre forzado (`am force-stop`, que no entrega `detached`) → reabrir | ✅ El nuevo arranque registra `Limpieza completa: 1 archivo(s) eliminado(s)`; la galería muestra *Temporal 0* | `14_galeria_tras_reinicio.png` |
+
+**Comprobaciones adicionales observadas en la consola:**
+
+- **Un solo controlador vivo.** Al cambiar de cámara, `Controlador liberado` aparece
+  antes de `Inicializada` (19:33:10.552 → 19:33:10.636).
+- **Pausa de la vista previa (RF-02).** Cada apertura de la confirmación o de la galería
+  registra `Vista previa en pausa`, y cada regreso `Vista previa reanudada`.
+- **Permisos.** El primer `inactive` corresponde al diálogo de permisos de Android; como
+  la cámara solo se libera en `paused`, la solicitud no se interrumpió y la cámara se
+  inicializó en cuanto se concedió (`resumed` → `Inicializada`).
+
+**Pendiente.** La medición de memoria con Flutter DevTools (repetir capturas canceladas
+y comprobar que la memoria vuelve a su nivel base) requiere ejecutar la app en modo
+*profile* conectada a DevTools; no forma parte de estas pruebas.
 
 ## 8. Limitaciones conocidas
 

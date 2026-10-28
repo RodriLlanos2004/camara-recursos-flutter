@@ -1,0 +1,52 @@
+Registro real de la consola (adb logcat -s flutter:I) durante las pruebas manuales.
+Emulador Medium_Phone_API_37.0 (Android 17, x86_64, aceleración WHPX) · APK release · 28/10/2026.
+Líneas copiadas sin modificar; los separadores (#) indican qué prueba se ejecutaba.
+
+# Arranque y permisos
+10-28 19:31:26.774  3558  3589 I flutter : [IMPORTANT:flutter/shell/platform/android/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend (OpenGLES).
+10-28 19:31:29.363  3558  3558 I flutter : [Temporales] Limpieza completa: 0 archivo(s) eliminado(s)
+10-28 19:31:29.978  3558  3558 I flutter : [Ciclo de vida] AppLifecycleState.inactive
+10-28 19:31:39.678  3558  3558 I flutter : [Ciclo de vida] AppLifecycleState.resumed
+10-28 19:31:39.790  3558  3558 I flutter : [Cámara] Inicializada: 10 (textura en GPU)
+
+# Cambio de cámara: se libera el controlador anterior antes de crear el nuevo
+10-28 19:33:10.552  3558  3558 I flutter : [Cámara] Controlador liberado (CameraController.dispose)
+10-28 19:33:10.636  3558  3558 I flutter : [Cámara] Inicializada: 1 (textura en GPU)
+
+# Prueba 2 — foto aceptada (la vista previa se pausa durante la confirmación)
+10-28 19:33:45.934  3558  3558 I flutter : [Cámara] Vista previa en pausa
+10-28 19:33:54.555  3558  3558 I flutter : [Almacenamiento] Guardado en documentos: /data/user/0/com.anahuac.camara_recursos/app_flutter/capturas/foto_20261028_193345.jpg
+10-28 19:33:54.565  3558  3558 I flutter : [Cámara] Vista previa reanudada
+
+# Prueba 1 — Cancelar
+10-28 19:35:02.511  3558  3558 I flutter : [Cámara] Vista previa en pausa
+10-28 19:35:06.726  3558  3558 I flutter : [Temporales] Descartado: CAP5100904168611399521.jpg
+10-28 19:35:06.742  3558  3558 I flutter : [Cámara] Vista previa reanudada
+
+# Prueba 9 — botón atrás del sistema en la confirmación
+10-28 19:37:11.594  3558  3558 I flutter : [Cámara] Vista previa reanudada
+10-28 19:37:11.595  3558  3558 I flutter : [Temporales] Descartado: CAP7820083770870266294.jpg
+
+# Prueba 2 — nombre personalizado
+10-28 19:37:41.420  3558  3558 I flutter : [Almacenamiento] Guardado en documentos: /data/user/0/com.anahuac.camara_recursos/app_flutter/capturas/Practica_camara.jpg
+
+# Prueba 5 — video aceptado
+10-28 19:38:15.932  3558  3558 I flutter : [Cámara] Vista previa en pausa
+10-28 19:38:37.181  3558  3558 I flutter : [Almacenamiento] Guardado en documentos: /data/user/0/com.anahuac.camara_recursos/app_flutter/capturas/Video_prueba.mp4
+10-28 19:38:37.196  3558  3558 I flutter : [Cámara] Vista previa reanudada
+
+# Pruebas 6 y 7 — botón Inicio durante una grabación
+10-28 19:39:11.968  3558  3558 I flutter : [Ciclo de vida] AppLifecycleState.inactive
+10-28 19:39:13.159  3558  3558 I flutter : [Ciclo de vida] AppLifecycleState.hidden
+10-28 19:39:13.159  3558  3558 I flutter : [Ciclo de vida] AppLifecycleState.paused
+10-28 19:39:13.312  3558  3558 I flutter : [Temporales] Descartado: REC929827982683421712.mp4
+10-28 19:39:13.324  3558  3558 I flutter : [Cámara] Controlador liberado (CameraController.dispose)
+
+# Prueba 8 — regreso a la app
+10-28 19:39:19.330  3558  3558 I flutter : [Ciclo de vida] AppLifecycleState.inactive
+10-28 19:39:19.488  3558  3558 I flutter : [Ciclo de vida] AppLifecycleState.resumed
+10-28 19:39:19.591  3558  3558 I flutter : [Cámara] Inicializada: 1 (textura en GPU)
+
+# Prueba 10 — cierre forzado con una foto sin confirmar (am force-stop: no entrega detached) y nuevo arranque
+10-28 19:40:21.487  7914  7914 I flutter : [Temporales] Limpieza completa: 1 archivo(s) eliminado(s)
+10-28 19:40:21.658  7914  7914 I flutter : [Cámara] Inicializada: 10 (textura en GPU)
