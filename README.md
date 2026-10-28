@@ -16,39 +16,23 @@ El reporte técnico está en [`docs/reporte_tecnico.md`](docs/reporte_tecnico.md
 
 ## Puesta en marcha
 
-Este repositorio contiene el código Dart, el `AndroidManifest.xml` y las pruebas. Las
-carpetas de plataforma restantes se generan con el SDK de Flutter.
+El repositorio ya incluye los proyectos nativos de Android e iOS, las versiones fijadas
+de las dependencias (`pubspec.lock`) y los permisos de cámara y micrófono de ambas
+plataformas. Compilado y probado con Flutter 3.44 (canal estable).
 
 ```bash
-# 1. Generar los archivos de Android/iOS que faltan.
-#    flutter create no sobrescribe los archivos que ya existen
-#    (lib/, test/, pubspec.yaml ni el AndroidManifest.xml de este repo).
-flutter create --project-name camara_recursos --org com.anahuac --platforms android,ios .
-
-# 2. Fijar las versiones de las dependencias en pubspec.yaml
-flutter pub add camera video_player path_provider path
-flutter pub add --dev flutter_lints
-
-# 3. Verificar y ejecutar en un dispositivo físico
+flutter pub get
 flutter analyze
 flutter test
-flutter run
+flutter run            # dispositivo o emulador Android conectado
 ```
 
-### iOS
+> En el emulador de Android la cámara puede ser una escena virtual o la webcam del PC
+> (`hw.camera.back=webcam0` en el `config.ini` del AVD). La cámara no funciona en el
+> simulador de iOS. Para medir rendimiento usa `flutter run --profile`.
 
-Agregar en `ios/Runner/Info.plist`:
-
-```xml
-<key>NSCameraUsageDescription</key>
-<string>La app usa la cámara para tomar fotografías y grabar video.</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>La app usa el micrófono para grabar el audio de los videos.</string>
-```
-
-> La cámara no funciona en el emulador de iOS. En el emulador de Android solo hay una
-> cámara simulada; para evaluar rendimiento usa un dispositivo físico y
-> `flutter run --profile`.
+Resultados de las pruebas manuales y evidencias: sección 7 de
+[`docs/reporte_tecnico.md`](docs/reporte_tecnico.md) y carpeta [`docs/evidencias/`](docs/evidencias/).
 
 ## Estructura (arquitectura por capas, Feature-First)
 
