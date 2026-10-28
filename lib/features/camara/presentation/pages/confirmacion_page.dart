@@ -247,6 +247,8 @@ class _ConfirmacionPageState extends State<ConfirmacionPage> with WidgetsBinding
                 border: const OutlineInputBorder(),
                 suffixText: _medio.extension,
                 errorText: _errorNombre,
+                // El mensaje de caracteres no permitidos no cabe en una línea.
+                errorMaxLines: 2,
               ),
               validator: NombreArchivo.validar,
             ),
